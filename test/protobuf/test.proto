@@ -1,0 +1,55 @@
+//数据交换格式(定义的是用于数据通信的封装类)
+//声明proto的版本
+syntax="proto3";
+
+//在C++中相当于定义namespace命名空间
+package mprpc;
+
+option cc_generic_services = true;
+
+message ResultCode{
+    int32 errcode=1;
+    bytes errmessage=2;
+}
+//定义用户登录请求消息类型
+message LoginRequest{
+    bytes name=1;//将name 设置为第一字段  //字段唯一编号
+    bytes pwd=2;//将pwd 设置为第二字段
+}
+
+//1,2代表第一字段和第二字段
+
+//定义用户响应消息类型
+message LoginResponse{
+    ResultCode result=1;
+    bool success=2;
+}
+
+
+message GetFriendListsRequest{
+    uint32 userid=1;   
+}
+
+
+message User{
+    bytes name=1;
+    uint32 age=2;
+    enum Sex{
+        MAN=0;
+        WOMAN=1;
+    }
+    Sex sex=3;
+
+}
+
+message GetFriendListsResponse{
+    ResultCode result=1;
+    repeated User friend_list=2;
+}
+
+service UserServiceRpc
+{
+    rpc Login(LoginRequest) returns(LoginResponse);
+    rpc GetFriendLists(GetFriendListsRequest) returns(GetFriendListsResponse);
+}
+
